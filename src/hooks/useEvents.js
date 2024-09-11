@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 const useEvents = (initialItems, zoomLevel) => {
   const [items, setItems] = useState(initialItems);

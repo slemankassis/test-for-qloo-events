@@ -1,6 +1,8 @@
 import { useMemo } from 'react';
 import useZoom from '../hooks/useZoom';
 import useEvents from '../hooks/useEvents';
+import { calculatePosition, calculateWidth, getColor } from '../utils';
+import useDraggable from '../hooks/useDraggable';
 
 const Timeline = ({ events, onEventUpdate }) => {
   const { zoomLevel, setZoomLevel, handleZoomIn, handleZoomOut } = useZoom(1);
@@ -15,67 +17,6 @@ const Timeline = ({ events, onEventUpdate }) => {
     handleNameBlur,
     handleResizeStart,
   } = useEvents(events, zoomLevel);
-
-  const handleDragStart = (e, item) => {
-    e.dataTransfer.setData('text/plain', JSON.stringify(item));
-  };
-
-  const calculateNewStartDate = (dropPosition) => {
-    const baseDate = new Date(DATE_BASE);
-    const daysFromBase = Math.floor(dropPosition / 10);
-    const newStartDate = new Date(baseDate);
-    newStartDate.setDate(baseDate.getDate() + daysFromBase);
-    return newStartDate;
-  };
-
-  const calculateNewEndDate = (newStartDate, item) => {
-    const start = new Date(item.start);
-    const end = new Date(item.end);
-
-    const diffInDays = Math.floor(end.getTime() - start.getTime()) / (1000 * 60 * 60 * 24);
-    const newEndDate = new Date(newStartDate);
-    newEndDate.setDate(newStartDate.getDate() + diffInDays);
-    return newEndDate;
-  };
-
-  const formatDate = (date) => {
-    const year = date.getFullYear();
-    const month = String(date.getMonth() + 1).padStart(2, '0');
-    const day = String(date.getDate()).padStart(2, '0');
-    return `${year}-${month}-${day}`;
-  };
-
-  const handleDragOver = (e) => {
-    e.preventDefault();
-  };
-
-  const handleDrop = (e) => {
-    e.preventDefault();
-    const item = JSON.parse(e.dataTransfer.getData('text/plain'));
-    const dropPosition = e.clientX;
-    console.log('🚀 ~ handleDrop ~ dropPosition:', dropPosition);
-    const newStartDate = calculateNewStartDate(dropPosition);
-    const newEndDate = calculateNewEndDate(newStartDate, item);
-    onEventUpdate(item.id, newStartDate, newEndDate);
-  };
-
-  const handleEventUpdate = (id, newStartDate, newEndDate) => {
-    setEvents((prevEvents) =>
-      prevEvents.map((item) =>
-        item.id === id
-          ? {
-              ...item,
-              start: formatDate(newStartDate),
-              end: formatDate(newEndDate),
-            }
-          : item
-      )
-    );
-  };
-
-  const updateItemDate = (id, newStartDate) => {
-    setItems(items.map((item) => (item.id === id ? { ...item, start: newStartDate } : item)));
-  };
 
   const sortedItems = useMemo(() => {
     const sortedItems = items.sort((a, b) => new Date(a.start) - new Date(b.start));
@@ -100,9 +41,7 @@ const Timeline = ({ events, onEventUpdate }) => {
     return sortedItems;
   }, [items]);
 
-  const a = sortedItems.map((item) => {
-    return `id: ${item.id}, lane: ${item.lane}`;
-  });
+  const { handleDragStart, handleDrop } = useDraggable(onEventUpdate, zoomLevel);
 
   return (
     <div className="timeline-container">
@@ -112,7 +51,6 @@ const Timeline = ({ events, onEventUpdate }) => {
       </div>
       <div className="timeline" onDrop={handleDrop} onDragOver={(e) => e.preventDefault()}>
         {sortedItems.map((item) => {
-          if (item.id === 5) console.log('🚀 ~ Timeline ~ item', item);
           return (
             <div
               className="timeline-event"
@@ -135,7 +73,7 @@ const Timeline = ({ events, onEventUpdate }) => {
                 />
               ) : (
                 <span className="event-name" onClick={() => handleNameClick(item.id, item.name)}>
-                  {item.id}
+                  {item.name}
                 </span>
               )}
               <div
