@@ -1,5 +1,7 @@
 # test-for-qloo: Timeline Visualization
 
+![alt text](image.png)
+
 ## How long you spent on the assignment
 
 Approximately 5.5 hours.
