@@ -1,6 +1,9 @@
 import { useState, useEffect } from 'react';
+import { useAppContext } from '../context/AppContext';
 
-const useEvents = (initialItems, zoomLevel) => {
+const useEvents = (initialItems) => {
+  const { zoomLevel } = useAppContext();
+
   const [items, setItems] = useState(initialItems);
   const [editingId, setEditingId] = useState(null);
   const [editingName, setEditingName] = useState('');

@@ -3,9 +3,11 @@ import useZoom from '../hooks/useZoom';
 import useEvents from '../hooks/useEvents';
 import { calculatePosition, calculateWidth, getColor } from '../utils';
 import useDraggable from '../hooks/useDraggable';
+import { useAppContext } from '../context/AppContext';
 
 const Timeline = ({ events, onEventUpdate }) => {
-  const { zoomLevel, setZoomLevel, handleZoomIn, handleZoomOut } = useZoom(1);
+  const { zoomLevel } = useAppContext();
+  const { handleZoomIn, handleZoomOut } = useZoom(1);
 
   const {
     items,
@@ -41,7 +43,7 @@ const Timeline = ({ events, onEventUpdate }) => {
     return sortedItems;
   }, [items]);
 
-  const { handleDragStart, handleDrop } = useDraggable(onEventUpdate, zoomLevel);
+  const { handleDragStart, handleDrop } = useDraggable(onEventUpdate);
 
   return (
     <div className="timeline-container">
@@ -83,20 +85,20 @@ const Timeline = ({ events, onEventUpdate }) => {
                   backgroundColor: getColor(item.id),
                 }}
               >
-                {/* <div
+                <div
                   title={item.start}
                   className="resize-handle start"
                   onMouseDown={(e) => handleResizeStart(e, item.id, 'start')}
                 >
-                  {item.start}
+                  {/* {item.start} */}
                 </div>
                 <div
                   title={item.end}
                   className="resize-handle end"
                   onMouseDown={(e) => handleResizeStart(e, item.id, 'end')}
                 >
-                  {item.end}
-                </div> */}
+                  {/* {item.end} */}
+                </div>
               </div>
             </div>
           );

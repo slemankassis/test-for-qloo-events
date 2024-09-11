@@ -1,7 +1,9 @@
 import { useState } from 'react';
 import { DATE_BASE } from '../constants';
+import { useAppContext } from '../context/AppContext';
 
-export default function useDraggable(onEventUpdate, zoomLevel) {
+export default function useDraggable(onEventUpdate) {
+  const { zoomLevel } = useAppContext();
   const [relativeX, setRelativeX] = useState(0);
 
   const handleDragStart = (e, item) => {

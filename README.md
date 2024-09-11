@@ -11,6 +11,10 @@ The implementation is simple and uses CSS Grid for efficient layout.
 ## What you would change if you were going to do it again
 
 I would add more features like zooming, drag-and-drop, and inline editing.
+Add Typescript
+Add unit testing (Storybook and Jest)
+Add e2e testing (Cypress)
+Add accessibility compliance following WCAG 2.2 AAA
 
 ## How you made your design decisions
 
