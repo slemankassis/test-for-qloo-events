@@ -1,6 +1,7 @@
 export const calculatePosition = (startDate, zoomLevel) => {
-  const baseDate = new Date('2021-01-01');
+  const baseDate = new Date(DATE_BASE);
   const eventStartDate = new Date(startDate);
+  // No necessary to use Math.floor here
   const diffInDays = Math.floor((eventStartDate.getTime() - baseDate.getTime()) / (1000 * 60 * 60 * 24));
   return `${diffInDays * 10 * zoomLevel}px`;
 };
@@ -8,12 +9,13 @@ export const calculatePosition = (startDate, zoomLevel) => {
 export const calculateWidth = (startDate, endDate, zoomLevel) => {
   const start = new Date(startDate);
   const end = new Date(endDate);
-  const diffInDays = Math.floor((end.getTime() - start.getTime()) / (1000 * 60 * 60 * 24));
+  // No necessary to use Math.floor here
+  const diffInDays = Math.floor(end.getTime() - start.getTime()) / (1000 * 60 * 60 * 24);
   return `${diffInDays * 10 * zoomLevel}px`;
 };
 
 export const calculateNewDate = (dropPosition, zoomLevel) => {
-  const baseDate = new Date('2021-01-01');
+  const baseDate = new Date(DATE_BASE);
   const daysPerPixel = 1 / (10 * zoomLevel);
   const daysFromBase = dropPosition * daysPerPixel;
   const newDate = new Date(baseDate);
@@ -22,7 +24,7 @@ export const calculateNewDate = (dropPosition, zoomLevel) => {
 };
 
 const getRandomColor = (index) => {
-  const hue = (index * 137.508) % 360;
+  const hue = (index * 137.508) % 360; // Use golden angle approximation
   return `hsl(${hue}, 70%, 50%)`;
 };
 

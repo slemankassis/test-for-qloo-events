@@ -13,6 +13,8 @@ body {
   white-space: nowrap;
   display: grid;
   grid-auto-rows: min-content;
+  grid-template-columns: repeat(auto-fill, minmax(0, 2fr));
+  /* gap: 0; */
 }
 
 .timeline-event {
@@ -29,7 +31,7 @@ body {
   background-color: #007bff;
   border-radius: 4px;
   z-index: 1;
-  padding: 8px;
+  padding: 1px;
 }
 
 .event-name {

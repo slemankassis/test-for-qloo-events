@@ -5,6 +5,10 @@ const useEvents = (initialItems, zoomLevel) => {
   const [editingId, setEditingId] = useState(null);
   const [editingName, setEditingName] = useState('');
 
+  useEffect(() => {
+    setItems(initialItems);
+  }, [initialItems]);
+
   const handleNameClick = (id, name) => {
     setEditingId(id);
     setEditingName(name);
