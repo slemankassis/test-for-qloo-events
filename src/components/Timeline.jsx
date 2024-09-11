@@ -55,7 +55,7 @@ const Timeline = ({ events, onEventUpdate }) => {
         {sortedItems.map((item) => {
           return (
             <div
-              className="timeline-event"
+              className="timeline-event grabbable"
               key={item.id}
               draggable
               onDragStart={(e) => handleDragStart(e, item)}
@@ -74,10 +74,15 @@ const Timeline = ({ events, onEventUpdate }) => {
                   onKeyDown={(e) => e.key === 'Enter' && handleNameBlur(item.id)}
                 />
               ) : (
-                <span className="event-name" onClick={() => handleNameClick(item.id, item.name)}>
+                <span
+                  title={`ID: ${item.id}`}
+                  className="event-name"
+                  onClick={() => handleNameClick(item.id, item.name)}
+                >
                   {item.name}
                 </span>
               )}
+
               <div
                 className="event-bar"
                 style={{
@@ -87,17 +92,17 @@ const Timeline = ({ events, onEventUpdate }) => {
               >
                 <div
                   title={item.start}
-                  className="resize-handle start"
+                  className="resize-handle start tooltip"
                   onMouseDown={(e) => handleResizeStart(e, item.id, 'start')}
                 >
-                  {/* {item.start} */}
+                  <span className="tooltip-text">{item.start}</span>
                 </div>
                 <div
                   title={item.end}
-                  className="resize-handle end"
+                  className="resize-handle end tooltip"
                   onMouseDown={(e) => handleResizeStart(e, item.id, 'end')}
                 >
-                  {/* {item.end} */}
+                  <span className="tooltip-text">{item.end}</span>
                 </div>
               </div>
             </div>
