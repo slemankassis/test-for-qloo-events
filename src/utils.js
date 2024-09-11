@@ -21,13 +21,12 @@ export const calculateNewDate = (dropPosition, zoomLevel) => {
   return newDate.toISOString().split('T')[0];
 };
 
-const getRandomColor = () => {
-  const blue = Math.floor(Math.random() * 256);
-  const gray = Math.floor(Math.random() * 256);
-  return Math.random() > 0.5 ? `rgb(0, 0, ${blue})` : `rgb(${gray}, ${gray}, ${gray})`;
+const getRandomColor = (index) => {
+  const hue = (index * 137.508) % 360;
+  return `hsl(${hue}, 70%, 50%)`;
 };
 
-const colors = new Array(10).fill(null).map((_, i) => getRandomColor());
+const colors = new Array(60).fill(null).map((_, i) => getRandomColor(i));
 
 export const getColor = (id) => {
   return colors[id % colors.length];

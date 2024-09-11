@@ -1,14 +1,20 @@
-import { useState, useMemo } from 'react';
-import { calculateNewDate, calculatePosition, calculateWidth, getColor } from '../utils';
+import { useMemo } from 'react';
+import useZoom from '../hooks/useZoom';
+import useEvents from '../hooks/useEvents';
 
 const Timeline = ({ events }) => {
-  const [zoomLevel, setZoomLevel] = useState(2);
-  const [items, setItems] = useState(events);
-  const [editingId, setEditingId] = useState(null);
-  const [editingName, setEditingName] = useState('');
+  const { zoomLevel, setZoomLevel, handleZoomIn, handleZoomOut } = useZoom(2);
 
-  const handleZoomIn = () => setZoomLevel(zoomLevel * 1.2);
-  const handleZoomOut = () => setZoomLevel(zoomLevel / 1.2);
+  const {
+    items,
+    setItems,
+    editingId,
+    editingName,
+    handleNameClick,
+    handleNameChange,
+    handleNameBlur,
+    handleResizeStart,
+  } = useEvents(events, zoomLevel);
 
   const handleDragStart = (e, id) => {
     e.dataTransfer.setData('id', id);
@@ -24,55 +30,8 @@ const Timeline = ({ events }) => {
     setItems(items.map((item) => (item.id === id ? { ...item, start: newStartDate } : item)));
   };
 
-  const handleNameClick = (id, name) => {
-    setEditingId(id);
-    setEditingName(name);
-  };
-
-  const handleNameChange = (e) => {
-    setEditingName(e.target.value);
-  };
-
-  const handleNameBlur = (id) => {
-    setItems(items.map((item) => (item.id === id ? { ...item, name: editingName } : item)));
-    setEditingId(null);
-  };
-
-  const handleResizeStart = (e, id, type) => {
-    e.preventDefault();
-    const initialX = e.clientX;
-    const item = items.find((item) => item.id === id);
-    const initialDate = type === 'start' ? new Date(item.start) : new Date(item.end);
-
-    const onMouseMove = (e) => {
-      const diffInPixels = e.clientX - initialX;
-      const diffInDays = diffInPixels / (10 * zoomLevel);
-      const newDate = new Date(initialDate);
-      newDate.setDate(initialDate.getDate() + diffInDays);
-
-      setItems(
-        items.map((item) =>
-          item.id === id
-            ? {
-                ...item,
-                [type]: newDate.toISOString().split('T')[0],
-              }
-            : item
-        )
-      );
-    };
-
-    const onMouseUp = () => {
-      document.removeEventListener('mousemove', onMouseMove);
-      document.removeEventListener('mouseup', onMouseUp);
-    };
-
-    document.addEventListener('mousemove', onMouseMove);
-    document.addEventListener('mouseup', onMouseUp);
-  };
-
-  const { sortedItems, lanes } = useMemo(() => {
-    const sortedItems = [...items].sort((a, b) => new Date(a.start) - new Date(b.start));
+  const sortedItems = useMemo(() => {
+    const sortedItems = items.sort((a, b) => new Date(a.start) - new Date(b.start));
     const lanes = [];
 
     sortedItems.forEach((item) => {
@@ -91,7 +50,7 @@ const Timeline = ({ events }) => {
       }
     });
 
-    return { sortedItems, lanes };
+    return sortedItems;
   }, [items]);
   console.log('🚀 ~ sortedItems.forEach ~ sortedItems:', sortedItems);
 
@@ -134,8 +93,20 @@ const Timeline = ({ events }) => {
                 backgroundColor: getColor(item.id),
               }}
             >
-              <div className="resize-handle start" onMouseDown={(e) => handleResizeStart(e, item.id, 'start')}></div>
-              <div className="resize-handle end" onMouseDown={(e) => handleResizeStart(e, item.id, 'end')}></div>
+              <div
+                title={item.start}
+                className="resize-handle start"
+                onMouseDown={(e) => handleResizeStart(e, item.id, 'start')}
+              >
+                {item.start}
+              </div>
+              <div
+                title={item.end}
+                className="resize-handle end"
+                onMouseDown={(e) => handleResizeStart(e, item.id, 'end')}
+              >
+                {item.end}
+              </div>
             </div>
           </div>
         ))}

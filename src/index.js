@@ -1,8 +1,8 @@
-import { render } from "react-dom";
-import Timeline from "./components/Timeline";
-import timelineItems from "./timelineItems";
-import "./index.css";
+import { render } from 'react-dom';
+import timelineItems from './timelineItems';
+import './index.css';
+import Timeline from './components/Timeline';
 
-const App = () => <Timeline events={timelineItems} />;
+const App = () => <Timeline events={timelineItems.slice(0, 4)} />;
 
-render(<App />, document.getElementById("root"));
+render(<App />, document.getElementById('root'));
