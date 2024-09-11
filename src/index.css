@@ -1,0 +1,90 @@
+body {
+  margin: 0;
+  padding: 0;
+  font-family: sans-serif;
+}
+
+.timeline {
+  position: relative;
+  width: 100%;
+  height: 200px;
+  border: 1px solid #ccc;
+  padding: 10px;
+  overflow-x: scroll;
+  white-space: nowrap;
+}
+
+.timeline-event {
+  position: relative;
+  display: inline-block;
+  margin-bottom: 20px;
+  height: 30px;
+}
+
+.event-bar {
+  position: absolute;
+  height: 20px;
+  background-color: #007bff;
+  border-radius: 4px;
+  z-index: 1;
+}
+
+.event-name {
+  position: relative;
+  z-index: 2;
+  font-size: 12px;
+  margin-bottom: 5px;
+  display: block;
+  text-align: center;
+  color: #333;
+  white-space: nowrap;
+}
+
+.timeline-container {
+  position: relative;
+}
+
+.zoom-controls {
+  margin-bottom: 10px;
+}
+
+.timeline {
+  display: grid;
+  grid-auto-rows: min-content;
+  position: relative;
+  width: 100%;
+  border: 1px solid #ccc;
+  overflow: hidden;
+}
+
+.timeline-event {
+  position: absolute;
+  top: 20px;
+}
+
+.event-name {
+  cursor: pointer;
+}
+
+.event-bar {
+  height: 20px;
+  background-color: #007bff;
+  border-radius: 4px;
+  position: relative;
+}
+
+.resize-handle {
+  position: absolute;
+  width: 5px;
+  height: 100%;
+  background-color: #000;
+  cursor: ew-resize;
+}
+
+.resize-handle.start {
+  left: 0;
+}
+
+.resize-handle.end {
+  right: 0;
+}
